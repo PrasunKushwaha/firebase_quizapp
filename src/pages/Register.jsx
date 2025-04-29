@@ -1,27 +1,38 @@
 // src/pages/Register.jsx
 import React, { useState } from "react";
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../firebase"; 
+import { setDoc, doc } from "firebase/firestore";
+import { auth, db } from "../firebase"; // ✅ Import Firestore DB
 import { useNavigate } from "react-router-dom";
 
 export default function Register() {
- 
+  const [name, setName] = useState(""); // ✅ State for Name
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
-    e.preventDefault(); 
+    e.preventDefault();
 
     try {
-   
-      await createUserWithEmailAndPassword(auth, email, password);
-      console.log("User registered successfully!");
-        navigate("/login");
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      const user = userCredential.user;
 
+      // ✅ Save user's name and email in Firestore
+      await setDoc(doc(db, "users", user.uid), {
+        name,
+        email,
+      });
+
+      console.log("User registered and data saved!");
+      navigate("/login");
     } catch (error) {
-      setError(error.message); 
+      setError(error.message);
     }
   };
 
@@ -31,6 +42,21 @@ export default function Register() {
         <h2 className="mb-6 text-3xl text-center">Register</h2>
         {error && <p className="mb-4 text-center text-red-500">{error}</p>}
         <form onSubmit={handleSubmit}>
+          {/* ✅ Name Field */}
+          <div className="mb-4">
+            <label htmlFor="name" className="block text-sm font-medium">
+              Name:
+            </label>
+            <input
+              type="text"
+              id="name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              className="w-full p-3 mt-2 text-black border border-gray-400 rounded-lg"
+              required
+            />
+          </div>
+
           <div className="mb-4">
             <label htmlFor="email" className="block text-sm font-medium">
               Email:

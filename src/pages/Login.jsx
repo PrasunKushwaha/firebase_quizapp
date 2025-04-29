@@ -14,7 +14,7 @@ export default function Login() {
   const loginWithGoogle = async () => {
     try {
       await signInWithPopup(auth, provider);
-      navigate("/quiz");
+      navigate("/welcome");
     } catch (err) {
       console.error("Google Login Error:", err);
     }
@@ -25,7 +25,7 @@ export default function Login() {
     e.preventDefault();
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      navigate("/quiz");
+      navigate("/welcome");
     } catch (err) {
       setError("Failed to log in. Please check your credentials.");
       console.error("Email/Password Login Error:", err);
@@ -85,9 +85,9 @@ export default function Login() {
 
         <p className="mt-4 text-center">
           Don't have an account?{" "}
-          <a href="/register" className="text-blue-400">
+          <button href="/" className="text-blue-400">
             Register
-          </a>
+          </button>
         </p>
       </div>
     </div>
