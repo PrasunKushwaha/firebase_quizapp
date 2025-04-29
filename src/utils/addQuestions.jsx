@@ -1,5 +1,3 @@
-// src/utils/addQuestions.jsx
-
 import { db } from "../firebase"; // Correct relative path
 import { collection, addDoc } from "firebase/firestore";
 

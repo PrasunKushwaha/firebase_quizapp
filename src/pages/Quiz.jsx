@@ -4,6 +4,8 @@ import { collection, getDocs } from "firebase/firestore";
 import { db } from "../firebase";
 import { useNavigate } from "react-router-dom";
 import QuestionCard from "./components/QuestionCard"
+import Loading from "./Loading";
+
 
 export default function Quiz() {
   const [questions, setQuestions] = useState([]);
@@ -21,18 +23,22 @@ export default function Quiz() {
   }, []);
 
   const handleAnswer = (isCorrect) => {
-    if (isCorrect) setScore((prev) => prev + 1);
+    let updatedScore = score;
+    if (isCorrect) updatedScore += 1;
+  
     if (currentIndex + 1 < questions.length) {
+      setScore(updatedScore);
       setCurrentIndex((prev) => prev + 1);
     } else {
-      navigate("/result", { state: { score, total: questions.length } });
+      navigate("/result", { state: { score: updatedScore, total: questions.length } });
     }
   };
+  
 
-  if (questions.length === 0) return <div>Loading...</div>;
+  if (questions.length === 0) return <Loading/>;
 
   return (
-    <div className="min-h-screen bg-gray-800 text-white flex flex-col items-center justify-center">
+    <div className="min-h-screen bg-black text-white flex flex-col items-center justify-center">
       <QuestionCard
         question={questions[currentIndex]}
         onAnswer={handleAnswer}
