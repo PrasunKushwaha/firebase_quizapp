@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { auth, provider } from "../firebase";
 import { signInWithPopup, signInWithEmailAndPassword } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -85,9 +86,10 @@ export default function Login() {
 
         <p className="mt-4 text-center">
           Don't have an account?{" "}
-          <button href="/" className="text-blue-400">
-            Register
-          </button>
+          <Link to={"/"}>
+            {" "}
+            <button className="text-blue-400">Register</button>
+          </Link>
         </p>
       </div>
     </div>

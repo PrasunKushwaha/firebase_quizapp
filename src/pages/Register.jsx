@@ -2,11 +2,13 @@
 import React, { useState } from "react";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { setDoc, doc } from "firebase/firestore";
-import { auth, db } from "../firebase"; // ✅ Import Firestore DB
+import { auth, db } from "../firebase"; 
 import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
+
 
 export default function Register() {
-  const [name, setName] = useState(""); // ✅ State for Name
+  const [name, setName] = useState(""); 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -94,9 +96,12 @@ export default function Register() {
         </form>
         <p className="mt-4 text-center">
           Already have an account?{" "}
-          <a href="/login" className="text-blue-400">
-            Login
-          </a>
+          <Link to={"/login"}>
+            {" "}
+            <button className="text-blue-400">
+              Login
+            </button>
+          </Link>
         </p>
       </div>
     </div>
