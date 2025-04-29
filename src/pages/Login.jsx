@@ -3,6 +3,8 @@ import { auth, provider } from "../firebase";
 import { signInWithPopup, signInWithEmailAndPassword } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
+import { db } from "../firebase";
+import { doc, setDoc, getDoc } from "firebase/firestore";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -12,14 +14,30 @@ export default function Login() {
   const [error, setError] = useState("");
 
   // Function to handle Google login
-  const loginWithGoogle = async () => {
-    try {
-      await signInWithPopup(auth, provider);
-      navigate("/welcome");
-    } catch (err) {
-      console.error("Google Login Error:", err);
-    }
-  };
+ const loginWithGoogle = async () => {
+   try {
+     const result = await signInWithPopup(auth, provider);
+     const user = result.user;
+
+     const userRef = doc(db, "users", user.uid);
+     const userSnap = await getDoc(userRef);
+
+     // Only add to DB if user doc doesn't exist
+     if (!userSnap.exists()) {
+       await setDoc(userRef, {
+         name: user.displayName,
+         email: user.email,
+         createdAt: new Date(),
+       });
+       console.log("New Google user added to Firestore");
+     }
+
+     navigate("/welcome");
+   } catch (err) {
+     console.error("Google Login Error:", err);
+   }
+ };
+
 
   // Function to handle email/password login
   const loginWithEmailPassword = async (e) => {
